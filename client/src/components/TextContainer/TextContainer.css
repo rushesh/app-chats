@@ -1,7 +1,8 @@
 .textContainer {
   display: flex;
   flex-direction: column;
-  margin-left: 50px;
+  margin-right: 50px;
+  margin-left: 20px;
   color: white;
   height: 100%;
   justify-content: space-between;
