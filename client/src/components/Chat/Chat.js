@@ -30,14 +30,19 @@ const Chat = ({ location }) => {
   
   useEffect(() => {
     const { name, room } = queryString.parse(location.search);
-
-    socket = io(ENDPOINT, {
+    if(name==null || room ==null || name==undefined || room ==undefined){
+      setErrorMsg(`Name or roomname is not present`);
+      setSnack({...snack,open:true});
+      history.push("/");
+    }
+    else{
+      socket = io(ENDPOINT, {
       withCredentials: true,
       extraHeaders: {
         "my-custom-header": "abcd"
       }
     });
-
+    
     setRoom(room);
     setName(name)
 
@@ -49,9 +54,12 @@ const Chat = ({ location }) => {
       }
       setErrorMsg(null);
     });
-  }, [ location.search,history,snack]);
+  }
+  }, [ location.search]);
   
   useEffect(() => {
+    const { name, room } = queryString.parse(location.search);
+    if(name!==null && room !==null && name!==undefined && room !==undefined){
     socket.on('message', message => {
       setMessages(messages => [ ...messages, message ]);
     });
@@ -64,7 +72,13 @@ const Chat = ({ location }) => {
     socket.on("roomData", ({ users }) => {
       setUsers(users);
     });
-}, []);
+  }
+  else{
+    setErrorMsg(`Name or roomname is not present`);
+      setSnack({...snack,open:true});
+      history.push("/");
+  }
+}, [location.search]);
 
   const sendMessage = (event) => {
     event.preventDefault();
